@@ -256,7 +256,7 @@ export function UserNav() {
   }
 
   return (
-    <div className="flex items-center gap-3 text-sm">
+    <div className="hidden md:flex items-center gap-3 text-sm">
       <Link href="/missions">Missions</Link>
       <Link href="/admin/roles">Admin</Link>
       <Link href="/login">Login</Link>

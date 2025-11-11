@@ -37,6 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="fr">
       <body className="min-h-screen antialiased bg-gradient-to-b from-indigo-100 to-zinc-100">
         <header className="border-b-2 border-border/50 relative z-10 bg-gradient-to-r from-card via-card to-card/95 backdrop-blur-sm shadow-xl shadow-black/10 ring-2 ring-black/5 sticky top-0 overflow-visible">
+          {/* Ligne 1 : Logo, Navigation Admin, UserNav */}
           <div className="container flex items-center justify-between py-2 sm:py-3 gap-3 sm:gap-4 md:gap-6 max-w-full overflow-visible">
             {/* Logo à gauche */}
             <div className="flex items-center justify-start flex-shrink-0">
@@ -52,14 +53,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </Link>
             </div>
             
-            {/* Centre : Widget de niveau + Navigation principale */}
+            {/* Centre : Navigation principale (Admin) */}
             <div className="flex items-center gap-3 sm:gap-4 md:gap-6 flex-1 justify-center min-w-0 overflow-x-auto">
-              {/* Widget de niveau */}
-              <div className="flex-shrink-0">
-                <LevelBadgeHeaderWrapper />
-              </div>
-              
-              {/* Navigation principale (Admin) */}
               <div className="hidden md:flex items-center gap-2 flex-shrink-0">
                 <AdminNavWrapper />
               </div>
@@ -70,8 +65,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <UserNav />
             </div>
           </div>
+          
+          {/* Ligne 2 : Widget de niveau centré */}
+          <div className="container flex items-center justify-center py-1.5 sm:py-2 max-w-full">
+            <LevelBadgeHeaderWrapper />
+          </div>
         </header>
-        <main className="py-3 sm:py-4 md:py-6 overflow-x-hidden overflow-y-visible max-w-full pb-20 sm:pb-24">
+        <main className="py-3 sm:py-4 md:py-6 overflow-x-hidden overflow-y-auto max-w-full pb-20 sm:pb-24">
           <Container>
             <PageTransitionWrapper>{children}</PageTransitionWrapper>
           </Container>

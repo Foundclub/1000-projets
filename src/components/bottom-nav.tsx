@@ -38,25 +38,25 @@ export function BottomNav() {
   const baseNavItems = [
     {
       href: '/feed',
-      label: 'À la une',
+      label: 'Feed',
       icon: Sparkles,
       exact: false,
     },
     {
       href: '/missions',
-      label: 'Recherche de mission',
+      label: 'Missions',
       icon: Home,
       exact: true,
     },
     {
       href: '/my-applications',
-      label: 'Mes candidatures',
+      label: 'Candidatures',
       icon: FileText,
       exact: false,
     },
     {
       href: '/messages',
-      label: 'Mes messages',
+      label: 'Messages',
       icon: MessageSquare,
       exact: false,
     },
@@ -92,7 +92,7 @@ export function BottomNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative flex flex-col items-center justify-center gap-1 px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 min-w-[60px] sm:min-w-[70px]",
+                  "relative flex flex-col items-center justify-center gap-1.5 px-2 sm:px-3 py-2 rounded-lg transition-all duration-200 min-w-[60px] sm:min-w-[70px]",
                   "hover:bg-accent/50 active:scale-95",
                   isActive
                     ? "text-primary"
@@ -100,7 +100,7 @@ export function BottomNav() {
                 )}
               >
                 <div className={cn(
-                  "relative flex items-center justify-center",
+                  "relative flex items-center justify-center w-full",
                   isActive && "bg-primary/10 rounded-lg p-1.5"
                 )}>
                   <Icon className={cn(
@@ -109,7 +109,7 @@ export function BottomNav() {
                   )} />
                 </div>
                 <span className={cn(
-                  "text-[10px] sm:text-xs font-medium transition-all duration-200",
+                  "text-[10px] sm:text-xs font-medium transition-all duration-200 text-center",
                   isActive && "font-semibold"
                 )}>
                   {item.label}
