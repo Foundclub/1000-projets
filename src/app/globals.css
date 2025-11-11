@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 240 5.9% 90%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --primary: 239 84% 67.1%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 239 84% 67.1%;
+  --radius: 0.5rem;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  
+  /* Couleurs PRO et SOLIDAIRE */
+  --pro-100: 145 60% 95%;
+  --pro-500: 145 65% 35%;
+  --solidaire-100: 25 90% 96%;
+  --solidaire-500: 25 90% 50%;
+}
+
+html, body {
+  height: auto;
+  min-height: 100vh;
+}
+body { 
+  @apply bg-background text-foreground;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-width: 100vw;
+}
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-width: 100vw;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translate(-50%, -50%) translateY(-40px) translateX(30px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-80px) translateX(-30px);
+  }
+  75% {
+    transform: translate(-50%, -50%) translateY(-40px) translateX(15px);
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 25s ease-in-out infinite;
+  }
+}
+
+

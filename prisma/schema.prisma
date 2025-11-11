@@ -1,0 +1,390 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  ANNONCEUR
+  MISSIONNAIRE
+}
+
+enum Space {
+  PRO
+  SOLIDAIRE
+}
+
+enum MissionStatus {
+  PENDING
+  OPEN
+  CLOSED
+  ARCHIVED
+}
+
+enum SubmissionStatus {
+  PENDING
+  ACCEPTED
+  REFUSED
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  CODE
+  REWARD
+}
+
+enum ReportKind {
+  NO_REWARD
+  INVALID_CODE
+  ABUSE
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  REJECTED
+}
+
+model User {
+  id                     String         @id @default(cuid())
+  email                  String         @unique
+  displayName            String?
+  role                   Role           @default(MISSIONNAIRE)
+  activeRole             Role? // Rôle actif pour l'expérience utilisateur (peut être différent de role)
+  roleChosenAt           DateTime?
+  createdAt              DateTime       @default(now())
+  xp                     Int            @default(0)
+  xpPro                  Int            @default(0)
+  xpSolid                Int            @default(0)
+  lastAcceptedAt         DateTime?      // Dernière mission acceptée (pour tracking)
+  isCertifiedAnnonceur   Boolean        @default(false)
+  ratingAvg              Float          @default(0)
+  ratingCount            Int            @default(0)
+  // Champs pour demandes Annonceur
+  firstName              String?
+  lastName               String?
+  dateOfBirth            DateTime?
+  avatar                 String?
+  companyName            String?
+  justificatifUrl        String?
+  annonceurRequestStatus String?        @default("PENDING")
+  // Champs pour demandes Admin
+  adminRequestStatus     String?        @default("PENDING")
+  phone                  String?
+  // Champs pour profil annonceur
+  bio                    String? // Bio/description de l'annonceur
+  activities             String? // Activités de l'annonceur
+  website                String? // Site web personnel
+  missions               Mission[]      @relation("OwnerMissions")
+  submissions            Submission[]
+  applications           MissionApplication[]
+  ratingsGiven           Rating[]       @relation("RaterRatings")
+  ratingsReceived        Rating[]       @relation("AnnonceurRatings")
+  organizations          Organization[] @relation("OwnerOrganizations")
+  notifications          Notification[]
+  favoriteAnnonceurs     FavoriteAnnonceur[] @relation("FavoriterAnnonceurs")
+  favoritedBy            FavoriteAnnonceur[] @relation("FavoritedAnnonceur")
+  xpEvents               XpEvent[]
+  feedPrivacyDefault     FeedPrivacy         @default(AUTO)
+  feedPosts              FeedPost[]
+  feedLikes              FeedLike[]
+  feedComments           FeedComment[]
+  followsByMe            Follow[]            @relation("FollowsByMe")
+  followedBy             Follow[]            @relation("FollowsUser")
+}
+
+model Mission {
+  id             String        @id @default(cuid())
+  title          String
+  space          Space
+  description    String
+  criteria       String
+  slotsMax       Int
+  slotsTaken     Int           @default(0)
+  slaDecisionH   Int           @default(48)
+  slaRewardH     Int           @default(72)
+  imageUrl       String?
+  rewardText     String?
+  rewardEscrowContent String?   @db.Text // Récompense en séquestre (code promo, lien privé, etc.)
+  rewardMediaUrl String? // Média de récompense (image, capture d'écran, etc.) à envoyer automatiquement
+  baseXp         Int            @default(500)  // Base XP pour chaque mission acceptée
+  bonusXp        Int            @default(0)   // Bonus d'XP attribué par l'admin
+  ownerId        String
+  owner          User          @relation("OwnerMissions", fields: [ownerId], references: [id])
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  status         MissionStatus @default(OPEN)
+  isFeatured     Boolean       @default(false)
+  featuredRank   Int?
+  isHidden       Boolean       @default(false) // Pour masquer temporairement une mission
+  createdAt      DateTime      @default(now())
+  submissions    Submission[]
+  ratings        Rating[]
+  applications   MissionApplication[]
+  xpEvents       XpEvent[]
+  feedPosts      FeedPost[]
+
+  @@index([status, space])
+  @@index([status, isFeatured, featuredRank])
+  @@index([ownerId])
+  @@index([organizationId])
+  @@index([organizationId, isFeatured, featuredRank])
+}
+
+model Submission {
+  id                String           @id @default(cuid())
+  missionId         String
+  mission           Mission          @relation(fields: [missionId], references: [id])
+  userId            String
+  user              User             @relation(fields: [userId], references: [id])
+  proofUrl          String
+  proofShots        Json?
+  comments          String?
+  status            SubmissionStatus @default(PENDING)
+  reason            String?
+  rewardDeliveredAt DateTime? // Horodatage de la remise de la récompense
+  rewardNote        String? // Note sur la récompense (ex: "code XXX envoyé", "bon remis")
+  rewardMediaUrl    String? // URL du média de la récompense (image, capture d'écran, etc.)
+  feedPrivacyOverride FeedPrivacyOverride @default(INHERIT)
+  createdAt         DateTime         @default(now())
+  decisionAt        DateTime?
+  thread            Thread?           @relation("SubmissionThread")
+  feedPost          FeedPost?
+}
+
+model Thread {
+  id                String              @id @default(cuid())
+  submissionId      String?             @unique
+  submission        Submission?         @relation("SubmissionThread", fields: [submissionId], references: [id])
+  applicationId     String?             @unique
+  application       MissionApplication? @relation(fields: [applicationId], references: [id])
+  aId               String // Annonceur (owner de la mission)
+  bId               String // Missionnaire (candidat ou soumissionnaire)
+  messages          Message[]
+  createdAt         DateTime            @default(now())
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  threadId  String
+  thread    Thread      @relation(fields: [threadId], references: [id])
+  authorId  String
+  type      MessageType @default(TEXT)
+  content   String
+  createdAt DateTime    @default(now())
+}
+
+model Report {
+  id           String       @id @default(cuid())
+  submissionId String
+  kind         ReportKind
+  details      String?
+  status       ReportStatus @default(OPEN)
+  createdAt    DateTime     @default(now())
+}
+
+model Rating {
+  id           String   @id @default(cuid())
+  annonceurId  String
+  annonceur    User     @relation("AnnonceurRatings", fields: [annonceurId], references: [id])
+  raterId      String
+  rater        User     @relation("RaterRatings", fields: [raterId], references: [id])
+  missionId    String
+  mission      Mission  @relation(fields: [missionId], references: [id])
+  submissionId String
+  score        Int
+  comment      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([raterId, missionId])
+  @@index([annonceurId])
+}
+
+model Organization {
+  id          String    @id @default(cuid())
+  slug        String    @unique // Slug unique pour URL (ex: "mon-club")
+  name        String // Nom du club/organisation
+  logoUrl     String? // Logo du club
+  coverUrl    String? // Image de couverture
+  bio         String? // Description/bio du club
+  website     String? // Site web du club
+  isCertified Boolean   @default(false) // Badge certifié (admin)
+  ratingAvg   Float     @default(0) // Note moyenne agrégée
+  ratingCount Int       @default(0) // Nombre de notes
+  ownerId     String // Annonceur propriétaire
+  owner       User      @relation("OwnerOrganizations", fields: [ownerId], references: [id])
+  missions    Mission[]
+  followers   Follow[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([ownerId])
+  @@index([slug])
+  @@index([isCertified])
+}
+
+model Follow {
+  id             String          @id @default(cuid())
+  followerId     String // Utilisateur qui suit
+  follower       User            @relation("FollowsByMe", fields: [followerId], references: [id])
+  targetType     FollowTargetType
+  organizationId String? // Club suivi (si targetType = ORGANIZATION)
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  targetUserId   String? // Utilisateur suivi (si targetType = USER)
+  targetUser     User?           @relation("FollowsUser", fields: [targetUserId], references: [id])
+  createdAt      DateTime        @default(now())
+
+  @@unique([followerId, targetType, organizationId, targetUserId])
+  @@index([followerId])
+  @@index([targetType, organizationId, targetUserId])
+  @@index([organizationId])
+  @@index([targetUserId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String // Utilisateur destinataire
+  user      User     @relation(fields: [userId], references: [id])
+  type      String // Type de notification (ex: "NEW_MISSION", "MISSION_ACCEPTED")
+  payload   Json // Données de la notification (ex: { missionId, organizationId })
+  read      Boolean  @default(false) // Lu ou non
+  createdAt DateTime @default(now())
+
+  @@index([userId, read]) // Index pour requêtes fréquentes (liste non lues)
+  @@index([userId])
+}
+
+model FavoriteAnnonceur {
+  id             String   @id @default(cuid())
+  userId         String // Utilisateur qui ajoute en favoris
+  user           User     @relation("FavoriterAnnonceurs", fields: [userId], references: [id])
+  annonceurId    String // Annonceur favori
+  annonceur      User     @relation("FavoritedAnnonceur", fields: [annonceurId], references: [id])
+  createdAt      DateTime @default(now())
+
+  @@unique([userId, annonceurId]) // Un utilisateur ne peut ajouter un annonceur qu'une fois
+  @@index([userId])
+  @@index([annonceurId])
+}
+
+model XpEvent {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  missionId   String?
+  mission     Mission? @relation(fields: [missionId], references: [id])
+  kind        String   // Type: "MISSION_ACCEPTED", "BONUS_ADMIN", "BONUS_MANUAL", etc.
+  delta       Int      // Montant d'XP gagné/perdu
+  space       Space?   // PRO, SOLIDAIRE, ou null pour général
+  description String?  // Description optionnelle
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@index([missionId])
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum FollowTargetType {
+  ORGANIZATION
+  USER
+}
+
+enum FeedPrivacy {
+  AUTO
+  ASK
+  NEVER
+}
+
+enum FeedPrivacyOverride {
+  INHERIT
+  AUTO
+  ASK
+  NEVER
+}
+
+model MissionApplication {
+  id           String            @id @default(cuid())
+  missionId    String
+  mission      Mission           @relation(fields: [missionId], references: [id])
+  userId       String // Missionnaire qui veut faire la mission
+  user         User              @relation(fields: [userId], references: [id])
+  status       ApplicationStatus @default(PENDING)
+  message      String? // Message initial du missionnaire
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  thread       Thread?
+
+  @@unique([userId, missionId]) // Un utilisateur ne peut s'inscrire qu'une fois à une mission
+  @@index([missionId])
+  @@index([userId])
+  @@index([status])
+}
+
+model FeedPost {
+  id            String    @id @default(cuid())
+  missionId     String
+  mission       Mission   @relation(fields: [missionId], references: [id])
+  submissionId String    @unique
+  submission    Submission @relation(fields: [submissionId], references: [id])
+  authorId      String // Missionnaire (owner de la submission)
+  author        User      @relation(fields: [authorId], references: [id])
+  space         Space     // PRO | SOLIDAIRE (copie depuis Mission)
+  text          String?   @db.Text // Commentaire du missionnaire lors de la publication
+  mediaUrls     String[]  @default([]) // URLs signées (si on affiche des preuves anonymisées)
+  likeCount     Int       @default(0)
+  commentCount  Int       @default(0)
+  shareCount    Int       @default(0)
+  published     Boolean   @default(true)
+  editableUntil DateTime? // Fenêtre d'édition (60 min après création)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  likes         FeedLike[]
+  comments      FeedComment[]
+
+  @@index([space, createdAt])
+  @@index([authorId, createdAt])
+  @@index([published, createdAt])
+  @@index([missionId])
+  @@index([submissionId])
+}
+
+model FeedLike {
+  id        String   @id @default(cuid())
+  postId    String
+  post      FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@index([userId, createdAt])
+  @@index([postId])
+}
+
+model FeedComment {
+  id        String    @id @default(cuid())
+  postId    String
+  post      FeedPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  text      String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([postId, createdAt])
+  @@index([userId, createdAt])
+}

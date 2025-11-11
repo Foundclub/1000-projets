@@ -1,0 +1,21 @@
+{
+  "name": "1000 Projets",
+  "short_name": "1000Projets",
+  "description": "Missions PRO & SOLIDAIRE",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/Logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
+

@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run postinstall && npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["cdg1"]
+}
+
+
