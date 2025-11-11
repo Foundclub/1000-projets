@@ -250,7 +250,7 @@ export function MissionnaireProfile({ user: initialUser }: MissionnaireProfilePr
               <div className="text-sm text-muted-foreground">XP Général</div>
             </div>
             <div className="text-center p-4 bg-muted rounded-lg">
-              <div className="text-2xl font-bold">{user.feedPostsCount}</div>
+              <div className="text-2xl font-bold">{user.stats.feedPostsCount}</div>
               <div className="text-sm text-muted-foreground">Posts publiés</div>
             </div>
           </div>
