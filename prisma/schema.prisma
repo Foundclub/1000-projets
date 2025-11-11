@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRES_URL") // Utilise POSTGRES_URL (fallback si POSTGRES_PRISMA_URL n'est pas disponible)
+  url      = env("DATABASE_URL") // Utilise DATABASE_URL qui a une valeur dans Vercel
 }
 
 enum Role {
