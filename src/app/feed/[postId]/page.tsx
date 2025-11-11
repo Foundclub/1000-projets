@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
 import { FeedPostPageContent } from './feed-post-content';
+import { getBaseUrl } from '@/lib/url';
 
 export async function generateMetadata({ params }: { params: Promise<{ postId: string }> }): Promise<Metadata> {
   const { postId } = await params;
   
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/feed/${postId}`, {
       next: { revalidate: 60 },
     });

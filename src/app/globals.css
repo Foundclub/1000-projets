@@ -66,6 +66,11 @@ html {
   .animate-float {
     animation: float 25s ease-in-out infinite;
   }
+  
+  /* Support pour safe-area-inset sur iOS */
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
 }
 
 

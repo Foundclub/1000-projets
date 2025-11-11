@@ -78,7 +78,18 @@ export function BottomNav() {
     : baseNavItems;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t-2 border-border/50 shadow-2xl shadow-black/20">
+    <nav 
+      className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t-2 border-border/50 shadow-2xl shadow-black/20 safe-area-inset-bottom" 
+      style={{ 
+        transform: 'translateZ(0)',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        willChange: 'transform',
+        WebkitTransform: 'translateZ(0)',
+      }}
+    >
       <div className="container mx-auto px-2 sm:px-4">
         <div className="flex items-center justify-around h-16 sm:h-18">
           {navItems.map((item) => {

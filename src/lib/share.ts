@@ -1,15 +1,11 @@
+import { getBaseUrl } from './url';
+
 /**
  * Génère l'URL de partage pour un post du feed
  */
 export function generateFeedPostShareUrl(postId: string): string {
-  if (typeof window === 'undefined') {
-    // Server-side: utiliser l'URL de base depuis les variables d'environnement
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    return `${baseUrl}/feed/${postId}`;
-  }
-  
-  // Client-side: utiliser window.location.origin
-  return `${window.location.origin}/feed/${postId}`;
+  const baseUrl = getBaseUrl();
+  return `${baseUrl}/feed/${postId}`;
 }
 
 /**

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { prisma } from '@/lib/db';
 import { Role } from '@prisma/client';
+import { getBaseUrlFromRequest } from '@/lib/url';
 
 export async function POST(req: NextRequest) {
   const res = new NextResponse();
@@ -35,11 +36,12 @@ export async function POST(req: NextRequest) {
     );
 
     // Sign up user
+    const baseUrl = getBaseUrlFromRequest(req);
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/auth/callback`,
+        emailRedirectTo: `${baseUrl}/auth/callback`,
       },
     });
 
