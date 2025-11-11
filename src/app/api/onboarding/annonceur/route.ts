@@ -3,6 +3,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { slugify } from '@/lib/utils';
 import { z } from 'zod';
+import { sendAdminNotification } from '@/lib/email';
 
 const annonceurOnboardingSchema = z.object({
   firstName: z.string().min(1),
@@ -85,6 +86,20 @@ export async function POST(req: NextRequest) {
           // Role stays MISSIONNAIRE until approved
         },
       });
+    });
+
+    // Envoyer une notification email aux admins (de manière asynchrone, ne bloque pas la réponse)
+    const userName = `${firstName} ${lastName}`.trim();
+    sendAdminNotification({
+      type: 'annonceur_request',
+      userEmail: user.email,
+      userName,
+      userId: user.id,
+      companyName: organizationName,
+      requestDate: new Date(),
+    }).catch((error) => {
+      console.error('[Onboarding Annonceur] Erreur lors de l\'envoi de l\'email:', error);
+      // Ne pas bloquer la réponse si l'email échoue
     });
     
     return NextResponse.json({ success: true });

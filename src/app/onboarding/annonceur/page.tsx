@@ -161,7 +161,7 @@ export default function OnboardingAnnonceurPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 pb-24 sm:pb-28">
       <h1 className="text-2xl font-bold mb-6">Onboarding Annonceur</h1>
       <p className="text-muted-foreground mb-6">
         Complétez votre profil et créez votre organisation. Votre demande sera soumise pour validation.

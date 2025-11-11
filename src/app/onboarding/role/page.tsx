@@ -159,7 +159,7 @@ export default function OnboardingRolePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 pb-24 sm:pb-28">
       <h1 className="text-2xl font-bold mb-6">Choisissez votre rôle</h1>
       <p className="text-muted-foreground mb-6">
         Sélectionnez le rôle qui correspond le mieux à votre utilisation de la plateforme.

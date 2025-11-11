@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
+import { sendAdminNotification } from '@/lib/email';
 
 const onboardingSchema = z.object({
   role: z.enum(['MISSIONNAIRE', 'ANNONCEUR', 'ADMIN']),
@@ -115,6 +116,20 @@ export async function POST(req: NextRequest) {
           // Role stays MISSIONNAIRE until approved
         },
       });
+
+      // Envoyer une notification email aux admins (de manière asynchrone, ne bloque pas la réponse)
+      const userName = `${firstName} ${lastName}`.trim() || user.email;
+      sendAdminNotification({
+        type: 'annonceur_request',
+        userEmail: user.email,
+        userName,
+        userId: user.id,
+        companyName: companyName || undefined,
+        requestDate: new Date(),
+      }).catch((error) => {
+        console.error('[Onboarding Role] Erreur lors de l\'envoi de l\'email annonceur:', error);
+        // Ne pas bloquer la réponse si l'email échoue
+      });
       
       return NextResponse.json({ success: true });
     } else if (role === 'ADMIN') {
@@ -147,6 +162,20 @@ export async function POST(req: NextRequest) {
           adminRequestStatus: 'PENDING',
           // Role stays MISSIONNAIRE until approved
         },
+      });
+
+      // Envoyer une notification email aux admins (de manière asynchrone, ne bloque pas la réponse)
+      const userName = `${firstName} ${lastName}`.trim() || user.email;
+      sendAdminNotification({
+        type: 'admin_request',
+        userEmail: user.email,
+        userName,
+        userId: user.id,
+        phone: phone || undefined,
+        requestDate: new Date(),
+      }).catch((error) => {
+        console.error('[Onboarding Role] Erreur lors de l\'envoi de l\'email admin:', error);
+        // Ne pas bloquer la réponse si l'email échoue
       });
       
       return NextResponse.json({ success: true });
