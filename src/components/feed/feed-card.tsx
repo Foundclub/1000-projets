@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/avatar';
@@ -64,10 +65,25 @@ interface FeedCardProps {
 }
 
 export function FeedCard({ post, onLike, onComment, isAuthenticated }: FeedCardProps) {
+  const router = useRouter();
   const [liking, setLiking] = useState(false);
   const [sharing, setSharing] = useState(false);
 
-  const handleLike = async () => {
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Ne pas ouvrir si on clique sur un élément interactif
+    const target = e.target as HTMLElement;
+    if (
+      target.closest('button') ||
+      target.closest('a') ||
+      target.closest('[data-no-click]')
+    ) {
+      return;
+    }
+    router.push(`/feed/${post.id}`);
+  };
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!isAuthenticated || liking) return;
     setLiking(true);
     try {
@@ -77,7 +93,13 @@ export function FeedCard({ post, onLike, onComment, isAuthenticated }: FeedCardP
     }
   };
 
-  const handleShare = async () => {
+  const handleComment = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onComment(post.id);
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (sharing) return;
     setSharing(true);
     try {
@@ -103,25 +125,32 @@ export function FeedCard({ post, onLike, onComment, isAuthenticated }: FeedCardP
   const isCertified = post.mission.owner.isCertifiedAnnonceur || post.mission.organization?.isCertified;
 
   return (
-    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+    <Card 
+      className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+      onClick={handleCardClick}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start gap-3">
-          <ProfileRedirect userId={post.authorId}>
-            <Avatar
-              src={post.author.avatar}
-              alt={authorName}
-              name={authorName}
-              size="md"
-              className="ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-200 cursor-pointer"
-            />
-          </ProfileRedirect>
+          <div data-no-click onClick={(e) => e.stopPropagation()}>
+            <ProfileRedirect userId={post.authorId}>
+              <Avatar
+                src={post.author.avatar}
+                alt={authorName}
+                name={authorName}
+                size="md"
+                className="ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-200 cursor-pointer"
+              />
+            </ProfileRedirect>
+          </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <ProfileRedirect userId={post.authorId}>
-                <span className="font-semibold text-sm hover:text-primary transition-colors cursor-pointer">
-                  {authorName}
-                </span>
-              </ProfileRedirect>
+              <div data-no-click onClick={(e) => e.stopPropagation()}>
+                <ProfileRedirect userId={post.authorId}>
+                  <span className="font-semibold text-sm hover:text-primary transition-colors cursor-pointer">
+                    {authorName}
+                  </span>
+                </ProfileRedirect>
+              </div>
               <UserLevelBadge
                 xp={post.author.xp}
                 xpPro={post.author.xpPro}
@@ -142,11 +171,13 @@ export function FeedCard({ post, onLike, onComment, isAuthenticated }: FeedCardP
                 {post.space}
               </Badge>
             </div>
-            <Link href={`/missions/${post.missionId}`}>
-              <p className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer mt-1">
-                {post.mission.title}
-              </p>
-            </Link>
+            <div data-no-click onClick={(e) => e.stopPropagation()}>
+              <Link href={`/missions/${post.missionId}`}>
+                <p className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer mt-1">
+                  {post.mission.title}
+                </p>
+              </Link>
+            </div>
             <p className="text-xs text-muted-foreground mt-1">{timeAgo || '...'}</p>
           </div>
         </div>
@@ -184,7 +215,7 @@ export function FeedCard({ post, onLike, onComment, isAuthenticated }: FeedCardP
           </div>
         ) : null}
         
-        <div className="flex items-center gap-4 pt-2 border-t border-border/50">
+        <div className="flex items-center gap-4 pt-2 border-t border-border/50" data-no-click onClick={(e) => e.stopPropagation()}>
           <Button
             variant="ghost"
             size="sm"
@@ -206,7 +237,7 @@ export function FeedCard({ post, onLike, onComment, isAuthenticated }: FeedCardP
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onComment(post.id)}
+            onClick={handleComment}
             disabled={!isAuthenticated}
             className={cn(
               "gap-2 transition-all duration-200",
