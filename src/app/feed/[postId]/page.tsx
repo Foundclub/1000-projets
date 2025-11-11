@@ -1,27 +1,42 @@
 import { Metadata } from 'next';
 import { FeedPostPageContent } from './feed-post-content';
-import { getBaseUrl } from '@/lib/url';
+import { prisma } from '@/lib/db';
+import { getPublicUrl } from '@/lib/supabase';
 
 export async function generateMetadata({ params }: { params: Promise<{ postId: string }> }): Promise<Metadata> {
   const { postId } = await params;
   
   try {
-    const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/feed/${postId}`, {
-      next: { revalidate: 60 },
+    const post = await prisma.feedPost.findUnique({
+      where: { id: postId },
+      include: {
+        mission: {
+          select: {
+            title: true,
+            description: true,
+            imageUrl: true,
+          },
+        },
+      },
     });
     
-    if (!res.ok) {
+    if (!post) {
       return {
         title: 'Post - À la une',
         description: 'Découvrez cette mission accomplie',
       };
     }
     
-    const post = await res.json();
     const title = post.mission?.title || 'Mission accomplie';
     const description = post.text || post.mission?.description || 'Découvrez cette mission accomplie';
-    const image = post.mediaUrls?.[0] || post.mission?.imageUrl || undefined;
+    
+    // Construire l'URL de l'image
+    let image: string | undefined;
+    if (post.mediaUrls && post.mediaUrls.length > 0) {
+      image = post.mediaUrls[0];
+    } else if (post.mission?.imageUrl) {
+      image = getPublicUrl(post.mission.imageUrl, 'missions') || undefined;
+    }
     
     return {
       title: `${title} - À la une`,
@@ -40,6 +55,7 @@ export async function generateMetadata({ params }: { params: Promise<{ postId: s
       },
     };
   } catch (e) {
+    console.error('[generateMetadata] Error:', e);
     return {
       title: 'Post - À la une',
       description: 'Découvrez cette mission accomplie',
