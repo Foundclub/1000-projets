@@ -51,23 +51,23 @@ const SLIDES: Slide[] = [
     title: "Deux Espaces, Deux Objectifs",
     description: (
       <>
-        <div className="space-y-4 text-left">
-          <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary/30">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl font-bold text-primary">PRO</span>
-              <span className="text-sm font-semibold">Espace Professionnel</span>
+        <div className="space-y-3 sm:space-y-4 text-left">
+          <div className="bg-primary/10 p-3 sm:p-4 rounded-lg border-2 border-primary/30">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+              <span className="text-xl sm:text-2xl font-bold text-primary">PRO</span>
+              <span className="text-xs sm:text-sm font-semibold">Espace Professionnel</span>
             </div>
-            <p className="text-sm">
+            <p className="text-xs sm:text-sm leading-relaxed">
               Missions rémunérées ou avec récompenses professionnelles. Développez vos compétences métier, 
               travaillez avec des entreprises et construisez votre réseau professionnel.
             </p>
           </div>
-          <div className="bg-orange-500/10 p-4 rounded-lg border-2 border-orange-500/30">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl font-bold text-orange-500">SOLIDAIRE</span>
-              <span className="text-sm font-semibold">Espace Bénévolat</span>
+          <div className="bg-orange-500/10 p-3 sm:p-4 rounded-lg border-2 border-orange-500/30">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+              <span className="text-xl sm:text-2xl font-bold text-orange-500">SOLIDAIRE</span>
+              <span className="text-xs sm:text-sm font-semibold">Espace Bénévolat</span>
             </div>
-            <p className="text-sm">
+            <p className="text-xs sm:text-sm leading-relaxed">
               Missions d'engagement citoyen et d'impact social. Contribuez à des causes qui vous tiennent à cœur, 
               aidez des associations et créez un impact positif dans votre communauté.
             </p>
@@ -108,36 +108,36 @@ const SLIDES: Slide[] = [
     title: "Système XP & Niveaux",
     description: (
       <>
-        <div className="space-y-3 text-left">
-          <p className="text-center font-semibold mb-3">Trois barres de progression indépendantes :</p>
-          <div className="bg-muted/50 p-3 rounded-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-3 h-3 rounded-full bg-primary"></div>
-              <strong>XP Global</strong>
+        <div className="space-y-2.5 sm:space-y-3 text-left">
+          <p className="text-center text-xs sm:text-sm font-semibold mb-2 sm:mb-3">Trois barres de progression indépendantes :</p>
+          <div className="bg-muted/50 p-2.5 sm:p-3 rounded-lg">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-primary flex-shrink-0"></div>
+              <strong className="text-xs sm:text-sm">XP Global</strong>
             </div>
-            <p className="text-sm text-muted-foreground ml-5">
+            <p className="text-xs sm:text-sm text-muted-foreground ml-4 sm:ml-5 leading-relaxed">
               Gagnée sur toutes les missions (PRO + SOLIDAIRE) et en suivant des clubs
             </p>
           </div>
-          <div className="bg-primary/10 p-3 rounded-lg border border-primary/20">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-3 h-3 rounded-full bg-primary"></div>
-              <strong className="text-primary">XP PRO</strong>
+          <div className="bg-primary/10 p-2.5 sm:p-3 rounded-lg border border-primary/20">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-primary flex-shrink-0"></div>
+              <strong className="text-xs sm:text-sm text-primary">XP PRO</strong>
             </div>
-            <p className="text-sm text-muted-foreground ml-5">
+            <p className="text-xs sm:text-sm text-muted-foreground ml-4 sm:ml-5 leading-relaxed">
               Gagnée uniquement en accomplissant des missions professionnelles
             </p>
           </div>
-          <div className="bg-orange-500/10 p-3 rounded-lg border border-orange-500/20">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-              <strong className="text-orange-500">XP SOLIDAIRE</strong>
+          <div className="bg-orange-500/10 p-2.5 sm:p-3 rounded-lg border border-orange-500/20">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-orange-500 flex-shrink-0"></div>
+              <strong className="text-xs sm:text-sm text-orange-500">XP SOLIDAIRE</strong>
             </div>
-            <p className="text-sm text-muted-foreground ml-5">
+            <p className="text-xs sm:text-sm text-muted-foreground ml-4 sm:ml-5 leading-relaxed">
               Gagnée uniquement en accomplissant des missions solidaires
             </p>
           </div>
-          <p className="text-center text-sm mt-3">
+          <p className="text-center text-xs sm:text-sm mt-2 sm:mt-3">
             Débloquez des niveaux et des badges en progressant sur chaque barre !
           </p>
         </div>
@@ -251,28 +251,28 @@ export function WelcomeTutorial({ open: controlledOpen, onClose }: WelcomeTutori
 
   return (
     <Dialog open={internalOpen} onOpenChange={setInternalOpen}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0 sm:p-0">
+      <DialogContent className="w-full max-w-full sm:max-w-2xl h-full sm:h-auto max-h-[100vh] sm:max-h-[90vh] m-0 sm:m-4 rounded-none sm:rounded-lg overflow-hidden p-0 flex flex-col fixed inset-0 sm:inset-auto sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%]">
         <DialogTitle className="sr-only">
           Tutoriel de bienvenue - {slide.title}
         </DialogTitle>
         {/* Header avec indicateur de progression */}
-        <div className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 p-4 sm:p-6 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <div className="text-sm font-medium text-muted-foreground">
+        <div className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 p-3 sm:p-4 md:p-6 border-b flex-shrink-0">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <div className="text-xs sm:text-sm font-medium text-muted-foreground">
               {currentSlide + 1} / {SLIDES.length}
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleSkip}
-              className="h-8 w-8 p-0"
+              className="h-7 w-7 sm:h-8 sm:w-8 p-0"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
           
           {/* Barre de progression */}
-          <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+          <div className="w-full h-1.5 sm:h-2 bg-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-primary transition-all duration-300 ease-out"
               style={{ width: `${((currentSlide + 1) / SLIDES.length) * 100}%` }}
@@ -281,7 +281,7 @@ export function WelcomeTutorial({ open: controlledOpen, onClose }: WelcomeTutori
         </div>
 
         {/* Contenu du slide */}
-        <div className="overflow-y-auto max-h-[calc(90vh-200px)]">
+        <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
           <TutorialSlide
             key={slide.id}
             title={slide.title}
@@ -292,28 +292,18 @@ export function WelcomeTutorial({ open: controlledOpen, onClose }: WelcomeTutori
         </div>
 
         {/* Footer avec navigation */}
-        <div className="border-t p-4 sm:p-6 bg-card">
-          <div className="flex items-center justify-between gap-4">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={currentSlide === 0}
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Précédent
-            </Button>
-
-            <div className="flex items-center gap-2">
-              {/* Indicateurs de slides */}
+        <div className="border-t p-3 sm:p-4 md:p-6 bg-card flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+            {/* Indicateurs de slides - en haut sur mobile */}
+            <div className="flex items-center justify-center gap-1.5 sm:gap-2 order-2 sm:order-1">
               {SLIDES.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={cn(
-                    "h-2 w-2 rounded-full transition-all",
+                    "h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full transition-all",
                     index === currentSlide
-                      ? "bg-primary w-8"
+                      ? "bg-primary w-6 sm:w-8"
                       : "bg-muted hover:bg-muted-foreground/50"
                   )}
                   aria-label={`Aller au slide ${index + 1}`}
@@ -321,33 +311,48 @@ export function WelcomeTutorial({ open: controlledOpen, onClose }: WelcomeTutori
               ))}
             </div>
 
-            {isLastSlide ? (
+            {/* Boutons de navigation */}
+            <div className="flex items-center justify-between gap-2 sm:gap-4 order-1 sm:order-2 w-full sm:w-auto">
               <Button
-                onClick={handleComplete}
-                className="flex items-center gap-2"
+                variant="outline"
+                onClick={handlePrevious}
+                disabled={currentSlide === 0}
+                className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 flex-1 sm:flex-initial"
               >
-                Commencer maintenant
-                <ChevronRight className="h-4 w-4" />
+                <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Précédent</span>
+                <span className="sm:hidden">Préc.</span>
               </Button>
-            ) : (
-              <Button
-                onClick={handleNext}
-                className="flex items-center gap-2"
-              >
-                Suivant
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            )}
+
+              {isLastSlide ? (
+                <Button
+                  onClick={handleComplete}
+                  className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 flex-1 sm:flex-initial"
+                >
+                  <span className="hidden sm:inline">Commencer maintenant</span>
+                  <span className="sm:hidden">Commencer</span>
+                  <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleNext}
+                  className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 flex-1 sm:flex-initial"
+                >
+                  Suivant
+                  <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* Bouton Passer */}
           {!isLastSlide && (
-            <div className="mt-4 text-center">
+            <div className="mt-3 sm:mt-4 text-center">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSkip}
-                className="text-sm text-muted-foreground"
+                className="text-xs sm:text-sm text-muted-foreground h-8 sm:h-9"
               >
                 Passer le tutoriel
               </Button>
