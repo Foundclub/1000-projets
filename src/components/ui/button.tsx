@@ -1,12 +1,14 @@
 import React from 'react';
+import Link from 'next/link';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'outline' | 'ghost' | 'destructive';
   size?: 'default' | 'sm' | 'lg';
+  asChild?: boolean;
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'default', size = 'default', ...props }, ref) => {
+  ({ className, variant = 'default', size = 'default', asChild, ...props }, ref) => {
     const baseClasses = 'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
     
     const variantClasses = {
@@ -22,10 +24,23 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       lg: 'h-11 rounded-md px-8',
     };
     
+    const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className ?? ''}`;
+    
+    if (asChild && 'href' in props) {
+      const { href, ...linkProps } = props as { href: string } & typeof props;
+      return (
+        <Link
+          href={href}
+          className={classes}
+          {...(linkProps as any)}
+        />
+      );
+    }
+    
     return (
       <button
         ref={ref}
-        className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className ?? ''}`}
+        className={classes}
         {...props}
       />
     );

@@ -8,6 +8,7 @@ import { Container } from '@/components/ui/container';
 import { PageTransitionWrapper } from '@/components/page-transition-wrapper';
 import { LevelBadgeHeaderWrapper } from '@/components/level-badge-header-wrapper';
 import { AdminNavWrapper } from '@/components/admin-nav-wrapper';
+import { TutorialWrapper } from '@/components/tutorial/tutorial-wrapper';
 
 export const metadata = {
   title: '1000 Projets',
@@ -77,6 +78,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </Container>
         </main>
         <BottomNav />
+        <TutorialWrapper />
       </body>
     </html>
   );

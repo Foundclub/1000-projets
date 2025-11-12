@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Home, Briefcase, FileText, Sparkles, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ContextualTooltip } from '@/components/tutorial/contextual-tooltip';
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -98,7 +99,14 @@ export function BottomNav() {
               ? pathname === item.href
               : pathname?.startsWith(item.href);
             
-            return (
+            const tooltipContent = {
+              '/feed': 'Découvrez le feed "À la une" avec les publications des missionnaires',
+              '/missions': 'Explorez les missions PRO et SOLIDAIRE disponibles',
+              '/my-applications': 'Suivez toutes vos candidatures et soumissions',
+              '/messages': 'Communiquez avec les annonceurs après acceptation',
+            }[item.href] || '';
+
+            const navItem = (
               <Link
                 key={item.href}
                 href={item.href}
@@ -130,6 +138,17 @@ export function BottomNav() {
                 )}
               </Link>
             );
+
+            return tooltipContent ? (
+              <ContextualTooltip
+                key={item.href}
+                id={`bottom-nav-${item.href}`}
+                content={tooltipContent}
+                side="top"
+              >
+                {navItem}
+              </ContextualTooltip>
+            ) : navItem;
           })}
         </div>
       </div>
