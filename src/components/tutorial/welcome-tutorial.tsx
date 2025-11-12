@@ -251,7 +251,7 @@ export function WelcomeTutorial({ open: controlledOpen, onClose }: WelcomeTutori
 
   return (
     <Dialog open={internalOpen} onOpenChange={setInternalOpen}>
-      <DialogContent className="w-full max-w-full sm:max-w-2xl h-full sm:h-auto max-h-[100vh] sm:max-h-[90vh] m-0 sm:m-4 rounded-none sm:rounded-lg overflow-hidden p-0 flex flex-col fixed inset-0 sm:inset-auto sm:left-[50%] sm:top-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%]">
+      <DialogContent className="!fixed !inset-0 sm:!inset-auto sm:!left-[50%] sm:!top-[50%] sm:!translate-x-[-50%] sm:!translate-y-[-50%] !translate-x-0 !translate-y-0 w-full max-w-full sm:max-w-2xl h-full sm:h-auto max-h-[100vh] sm:max-h-[90vh] m-0 sm:m-4 rounded-none sm:rounded-lg overflow-hidden p-0 flex flex-col">
         <DialogTitle className="sr-only">
           Tutoriel de bienvenue - {slide.title}
         </DialogTitle>
