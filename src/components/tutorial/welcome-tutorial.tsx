@@ -19,14 +19,21 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { shouldShowTutorial, markTutorialShown, markTutorialCompleted } from '@/lib/tutorial';
-import Image from 'next/image';
 
 interface WelcomeTutorialProps {
   open?: boolean;
   onClose?: () => void;
 }
 
-const SLIDES = [
+interface Slide {
+  id: number;
+  title: string;
+  description: React.ReactNode;
+  icon?: React.ReactNode;
+  image?: string;
+}
+
+const SLIDES: Slide[] = [
   {
     id: 1,
     title: "Bienvenue sur 1000 Projets",
